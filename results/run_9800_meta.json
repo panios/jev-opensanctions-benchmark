@@ -1,0 +1,34 @@
+{
+  "run_at": "2026-09-25T21:49:21+00:00",
+  "model": "jev-1.13.0",
+  "sample": 10000,
+  "data_url": "https://raw.githubusercontent.com/chansmi/OSINT_entity_resolution/a1f62b56c4bae8f372c38bff6ff0a422a3e9f1a3/data/samples/sample_10000.json",
+  "repo_commit": "a1f62b56c4bae8f372c38bff6ff0a422a3e9f1a3",
+  "test_pairs": 9800,
+  "scored": 9800,
+  "failed": 0,
+  "threshold": 0.5,
+  "workers": 12,
+  "question": {
+    "same_entity": {
+      "type": "noul",
+      "instructions": "You are an expert entity resolution system for sanctions screening. Do `entity_a` and `entity_b` refer to the same real-world person or organization? Your primary task is to identify CONFLICTS, not similarities. Name variations (transliterations, nicknames, titles) are common. Missing fields are normal - absence of data is NOT evidence of difference. The same entity often appears across multiple sources with variations. Look for CONTRADICTORY evidence (different dates, conflicting IDs, incompatible attributes). If no contradictions are found, they are the same entity. The DEFAULT is the same entity unless you find proof of difference.",
+      "criteria": {
+        "true": "No contradictions found: same entity.",
+        "false": "Explicit contradiction found: different entities."
+      }
+    }
+  },
+  "python": "3.14.7",
+  "results": {
+    "tp": 7477,
+    "fp": 112,
+    "fn": 59,
+    "tn": 2152,
+    "precision": 0.985242,
+    "recall": 0.992171,
+    "f1": 0.988694
+  },
+  "input_tokens": 6302467,
+  "wall_seconds": 613.5
+}

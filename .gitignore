@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.env
+.DS_Store
+# downloaded data and local runs
+sample_*.json
+jev_results*.jsonl

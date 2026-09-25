@@ -1,0 +1,41 @@
+=== Jev (jev-1.13.0) on 9800 test pairs from sample_10000 ===
+Run: 2026-09-25 21:49 UTC | data: chansmi/OSINT_entity_resolution @ a1f62b5, sample_10000.json pairs 200-9999
+F1 98.87   precision 98.52   recall 99.22
+TP 7477  FP 112  FN 59  TN 2152
+
+By record type:
+  people                               n= 3677  F1 98.79
+  organizations                        n= 2285  F1 96.84
+  other (Occupancy, Succession, ...)   n= 3838  F1 99.57
+
+Input tokens per pair  643
+Estimated cost         $0.2647 for this run, $27.01 per million pairs (recorded usage x $0.042/M input tokens; failed attempts not counted)
+Latency per pair       median 742 ms, p95 814 ms (includes retries; 0 pairs retried)
+Wall time              613.5 s with 12 parallel requests
+
+Paper Table 3 (published F1). '*' = same test pairs as this run:
+    nomenklatura RegressionV1      rules          91.33   n=8000
+  * Llama-3.1-8B                   0-shot         94.05   n=9800
+  * Llama-3.1-8B                   0-shot (opt)   95.94   n=9800
+    Llama-3.1-8B                   4-shot (opt)   95.64   n=800
+    DeepSeek-R1-Distill-Qwen-14B   0-shot         97.76   n=3680
+    DeepSeek-R1-Distill-Qwen-14B   0-shot (opt)   98.23   n=3680
+    GPT-3.5 Turbo                  0-shot         94.49   n=1960
+  * GPT-4o                         0-shot         98.95   n=9800
+  * GPT-5 Nano                     0-shot         95.24   n=9800
+    GPT-5.2 Pro                    0-shot         98.53   n=800
+    GPT-5.2 Pro                    4-shot         98.75   n=800
+    Claude 3 Haiku                 0-shot         92.68   n=1960
+  * Claude 3.7 Sonnet              0-shot         97.50   n=9800
+  * Claude Opus 4.5                0-shot         95.45   n=9800
+  * Jev jev-1.13.0                 0-shot         98.87   n=9800
+
+Additional analysis (25-26 Sep):
+  95% bootstrap CI for F1: 98.70-99.04 (GPT-4o's 98.95 falls inside)
+  Accuracy 98.26 | F1 excluding the 3,322 blank-prompt pairs: 97.98 (n=6,478)
+  Stability: two 800-pair runs (results/run_800_a vs run_800_b) - 0 answers changed, max prob change 0.06
+  171 errors: 55 deciding field hidden by the 13-field format, 55 prompt rule followed,
+              1 undecidable, 60 judgement errors
+
+Per-pair results: results/run_9800.jsonl
+Run metadata:     results/run_9800_meta.json
