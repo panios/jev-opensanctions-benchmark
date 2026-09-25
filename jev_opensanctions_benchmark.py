@@ -8,13 +8,13 @@ Data  : data/samples/sample_{1000,10000}.json from that repo (CC-BY-NC 4.0)
 
 Test sets. The repo reserves the first 200 pairs of each sample for prompt
 development and evaluates on the rest:
-  --sample 10000 -> 9,800 test pairs  (Table 3 rows with n = 9,800: GPT-4o 0-shot,
-                                        Llama-3.1-8B, GPT-5 Nano, Claude 3.7 Sonnet,
-                                        Claude Opus 4.5)
-  --sample 1000  ->   800 test pairs  (Table 3 rows with n = 800: GPT-5.2 Pro,
-                                        Llama-3.1-8B few-shot)
-Other Table 3 rows use different samples (nomenklatura 8,000; DeepSeek 3,680;
-GPT-3.5 / Claude 3 Haiku 1,960) and are shown for reference only.
+  --sample 10000 -> 9,800 test pairs  (Table 3 rows on these pairs: GPT-4o, GPT-3.5 Turbo,
+                                        Llama-3.1-8B, GPT-5 Nano, Claude Opus 4.5)
+  --sample 1000  ->   800 test pairs  (Table 3 rows on these pairs: GPT-5.2 Pro 0-shot,
+                                        Llama-3.1-8B 4-shot)
+The paper states sizes only for its prompt-optimized rows; the others were checked
+against its published precision / recall / accuracy. Remaining rows use other samples
+or subsets of unknown size and are shown for reference only.
 
 Same as the paper's LLM baselines:
   * entity text: the repo's format_entity (llm_zeroshot.py), copied verbatim -
@@ -57,21 +57,21 @@ MAX_ATTEMPTS = 6
 # Source: TypeSafe launch pricing for Jev 1.13. Check before quoting other models.
 PRICE_PER_M_INPUT = {"jev-1.13.0": 0.042}
 
-# Paper Table 3: (model, configuration, F1, test pairs)
+# Paper Table 3: (model, configuration, F1, test pairs; None = subset of unknown size)
 PAPER_TABLE3 = [
     ("nomenklatura RegressionV1", "rules", 91.33, 8000),
     ("Llama-3.1-8B", "0-shot", 94.05, 9800),
     ("Llama-3.1-8B", "0-shot (opt)", 95.94, 9800),
     ("Llama-3.1-8B", "4-shot (opt)", 95.64, 800),
-    ("DeepSeek-R1-Distill-Qwen-14B", "0-shot", 97.76, 3680),
+    ("DeepSeek-R1-Distill-Qwen-14B", "0-shot", 97.76, 1960),
     ("DeepSeek-R1-Distill-Qwen-14B", "0-shot (opt)", 98.23, 3680),
-    ("GPT-3.5 Turbo", "0-shot", 94.49, 1960),
+    ("GPT-3.5 Turbo", "0-shot", 94.49, 9800),
     ("GPT-4o", "0-shot", 98.95, 9800),
     ("GPT-5 Nano", "0-shot", 95.24, 9800),
     ("GPT-5.2 Pro", "0-shot", 98.53, 800),
-    ("GPT-5.2 Pro", "4-shot", 98.75, 800),
-    ("Claude 3 Haiku", "0-shot", 92.68, 1960),
-    ("Claude 3.7 Sonnet", "0-shot", 97.50, 9800),
+    ("GPT-5.2 Pro", "4-shot", 98.75, None),
+    ("Claude 3 Haiku", "0-shot", 92.68, None),
+    ("Claude 3.7 Sonnet", "0-shot", 97.50, None),
     ("Claude Opus 4.5", "0-shot", 95.45, 9800),
 ]
 
@@ -107,8 +107,8 @@ def format_entity(entity):
 
 # ---------------------------------------------------------------------------
 # 2. The question - the paper's conflict-first instructions as one yes/no.
-#    ("person or organization" is the paper's own wording; it is used for
-#    every record type, as in the paper.)
+#    (wording follows the repository's llm_zeroshot.py, which says "person or
+#    organization" for every record type; the paper's appendix differs slightly.)
 # ---------------------------------------------------------------------------
 QUESTION = {
     "same_entity": {
@@ -295,7 +295,7 @@ def main():
     print("\nPaper Table 3 (published F1). '*' = same test pairs as this run:")
     for model, config, f1, n in PAPER_TABLE3:
         mark = "*" if full_run and n == n_test else " "
-        print(f"  {mark} {model:30s} {config:13s} {f1:6.2f}   n={n}")
+        print(f"  {mark} {model:30s} {config:13s} {f1:6.2f}   n={n or '?'}")
     print(f"  * {'Jev ' + args.model:30s} {'0-shot':13s} {100 * s['f1']:6.2f}   "
           f"n={len(rows)}" + ("" if full_run else "   (partial run)"))
 
