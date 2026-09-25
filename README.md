@@ -8,6 +8,14 @@ This repo runs [Jev](https://docs.typesafe.ai) (TypeSafe AI, `jev-1.13.0`) on th
 [code](https://github.com/chansmi/OSINT_entity_resolution)) using the paper's own test
 pairs, the same record text, and the same conflict-first instructions.
 
+The paper takes pairs of OpenSanctions records that analysts have already ruled on
+(merge / don't merge) and asks whether general-purpose LLMs can reproduce those decisions
+better than nomenklatura's own `RegressionV1` matcher — same candidate pairs, each record
+rendered as the same 13 fields, scored as F1 against the analyst judgements. Across roughly
+ten models (Llama-3.1-8B, DeepSeek-R1-Distill, GPT-3.5/4o/5, Claude), the frontier ones beat
+the rules-based baseline by a wide margin: 91.33 F1 for `RegressionV1` versus 98.95 for
+GPT-4o.
+
 ## Result
 
 **Same 9,800 test pairs** (`sample_10000.json`, pairs 200–9,999), zero-shot:
